@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerPath - SPA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .question-container {
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+}
+.question-container.active {
+    display: block;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+    </style>
+</head>
+<body>
+  <!-- Navigation -->
+<nav class="h-[80px] bg-[#f9ecde] border-b border-b-[#EFEFEF] flex items-center justify-between px-8 relative">
+    <!-- Left Side -->
+    <aside class="flex h-full items-center gap-5">
+        <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer hover:opacity-70">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14" />
+        </svg>
+        <div class="font-bold ml-2 text-3xl flex items-center text-[#2c2621]">
+           CareerPath
+        </div>
+    </aside>
+    
+    <!-- Right Side -->
+    <aside class="flex items-center gap-8 text-lg font-medium text-[#2c2621]">
+        <!-- About Button with Dropdown -->
+        <div class="relative">
+            <button id="aboutBtn" class="hover:text-purple-600 transition font-semibold flex items-center gap-1">
+                About
+                <svg id="aboutIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="transition-transform duration-200">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9l6 6 6-6"/>
+                </svg>
+            </button>
+            
+            <!-- About Dropdown Content -->
+            <div id="aboutDropdown" class="absolute top-full right-0 mt-2 w-[600px] max-w-[90vw] bg-white rounded-xl shadow-2xl border border-gray-100 p-8 z-50 hidden">
+                <div class="max-h-96 overflow-y-auto">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-[#2c2621] mb-2">About CareerPath</h3>
+                        <div class="w-16 h-1 bg-purple-600 mx-auto rounded-full"></div>
+                    </div>
+                    <div class="text-gray-700 leading-relaxed space-y-5 text-base">
+                        <p>
+                            CareerPath is your one-stop destination for personalized career and education guidance. We understand that choosing the right stream, degree, or career after school can feel overwhelming, especially with the growing number of opportunities and the pressure to make the "right" decision. That's why our platform combines smart technology with expert insights to make the journey simple and clear for students.
+                        </p>
+                        <p>
+                            Through our interactive <strong class="text-purple-700">aptitude and interest-based quiz</strong>, students discover careers that align with their strengths, passions, and future goals. We provide detailed <strong class="text-purple-700">career roadmaps</strong>—step-by-step pathways showing the education, skills, and opportunities needed to reach specific professions. Beyond just career matching, CareerPath also keeps students updated with <strong class="text-purple-700">college admissions timelines, government scholarships, and entrance exam alerts</strong>, ensuring they never miss an important milestone.
+                        </p>
+                        <p>
+                            What makes us unique is our focus on <strong class="text-purple-700">practical readiness</strong>. We go beyond theory, helping students explore <strong class="text-purple-700">skill development opportunities, mentorship programs, and real-world job readiness tips</strong>. Whether you are a high school student exploring your future, a parent guiding your child, or a graduate looking to reskill, CareerPath is designed to support you at every stage.
+                        </p>
+                        <p class="text-center bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <strong class="text-purple-800">Our mission is simple:</strong> to empower students to make informed, confident choices about their education and career, while building a future where every learner can achieve their true potential.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="router.navigateTo('login')" 
+            class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+            Log In
+        </button>
+        
+        <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer hover:opacity-80">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-gray-600">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M5.121 17.804A9.966 9.966 0 0112 15c2.21 0 4.236.72 5.879 1.926M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </div>
+    </aside>
+</nav>
+  <div class="fixed bottom-6 right-6">
+      <a href="chatbot.html">
+
+  <button id="chatbotBtn" class="w-14 h-14 rounded-full shadow-lg overflow-hidden border-2 border-gray-300">
+    <img src="bot.jpg" alt="Chatbot" class="w-full h-full object-cover">
+  </button>
+</div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[#f9ecde] shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="p-4 border-b">
+            <h2 class="text-xl font-bold text-[#2c2621]">CareerPath</h2>
+        </div>
+        <nav class="mt-4">
+            <a href="#" data-route="home" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b">Home</a>
+            <a href="#" data-route="courses" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b">Courses</a>
+            <a href="#" data-route="quiz" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b">Quiz</a>
+            <a href="#" data-route="chatbot" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b">Chatbot</a>
+           
+            <a href="#" data-route="register" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Register</a>
+        </nav>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Main Content Container -->
+    <div id="app" class=" h-[calc(100vh-80px)] ">
+        <!-- Content will be dynamically loaded here -->
+    </div>
+
+    <script>
+        // Router Class
+        class Router {
+            constructor() {
+                this.routes = {};
+                this.currentRoute = null;
+            }
+
+            // Add route
+            addRoute(path, handler) {
+                this.routes[path] = handler;
+            }
+
+            // Navigate to route
+            navigateTo(path) {
+                if (this.routes[path]) {
+                    this.currentRoute = path;
+                    this.routes[path]();
+                    // Update URL without page refresh
+                    history.pushState({ route: path }, '', `#${path}`);
+                }
+            }
+
+            // Initialize router
+            init() {
+                // Handle browser back/forward
+                window.addEventListener('popstate', (e) => {
+                    const route = e.state?.route || 'home';
+                    this.navigateTo(route);
+                });
+
+                // Load initial route
+                const initialRoute = location.hash.slice(1) || 'home';
+                this.navigateTo(initialRoute);
+            }
+        }
+
+        // Create router instance
+        const router = new Router();
+
+      router.addRoute('home', () => {
+    document.getElementById('app').innerHTML = `
+        <section class="bg-white h-[calc(100vh-80px)] flex items-center px-20 ml-20 ">
+            
+            <!-- Left Side Content -->
+            <div class="max-w-xl text-left flex-1">
+                <!-- Title -->
+                <h1 class="text-6xl font-extrabold text-gray-900 mb-4">
+                    Career <span class="text-purple-600">Guidance</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-8">Discover, Design, Succeed</p>
+                
+                <!-- Buttons -->
+                <div class="flex gap-4 mb-10">
+                    <button onclick="router.navigateTo('quiz')" 
+                        class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition">
+                        Get Started
+                    </button>
+                    <button onclick="router.navigateTo('login')" 
+                        class="border-2 border-purple-600 text-purple-600 px-6 py-3 rounded-lg hover:bg-purple-600 hover:text-white transition">
+                        Learn More
+                    </button>
+                </div>
+
+                <!-- Features -->
+                <div class="grid grid-cols-2 gap-y-6 gap-x-10 text-gray-700 mb-6">
+                    <div class="flex items-center gap-2">
+                        <span>🎯</span> <span>Personalized Guidance</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>📚</span> <span>Career Roadmaps</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>⚡</span> <span>Skill Development</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>🚀</span> <span>Job Readiness</span>
+                    </div>
+                </div>
+
+                <!-- Tagline -->
+                <p class="italic text-gray-500">
+                    "Helping 1000+ students find the right career path."
+                </p>
+            </div>
+
+            <!-- Right Side Image -->
+            <div class="ml-80">
+            <img src="im.jpg" 
+     alt="Career Guidance Illustration"
+     class="w-[600px] h-[600px] object-contain "></div>
+        </section>
+    `;
+});
+
+
+
+        router.addRoute('courses', () => {
+            document.getElementById('app').innerHTML = `
+                <section class="bg-[#ecba96] min-h-screen p-8">
+                    <div class="max-w-6xl mx-auto">
+                        <h1 class="text-4xl font-bold text-[#2c2621] mb-8 text-center">Career Courses</h1>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="bg-white p-6 rounded-lg shadow-lg">
+                                <h3 class="text-xl font-bold text-[#2c2621] mb-4">Web Development</h3>
+                                <p class="text-gray-600 mb-4">Learn modern web development technologies</p>
+                                <button class="bg-[#c38d67] text-white px-4 py-2 rounded hover:bg-[#b07d57] transition-colors">
+                                    Start Course
+                                </button>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-lg">
+                                <h3 class="text-xl font-bold text-[#2c2621] mb-4">Data Science</h3>
+                                <p class="text-gray-600 mb-4">Master data analysis and machine learning</p>
+                                <button class="bg-[#c38d67] text-white px-4 py-2 rounded hover:bg-[#b07d57] transition-colors">
+                                    Start Course
+                                </button>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-lg">
+                                <h3 class="text-xl font-bold text-[#2c2621] mb-4">Digital Marketing</h3>
+                                <p class="text-gray-600 mb-4">Learn effective marketing strategies</p>
+                                <button class="bg-[#c38d67] text-white px-4 py-2 rounded hover:bg-[#b07d57] transition-colors">
+                                    Start Course
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+        });
+
+      router.addRoute('quiz', async () => {
+    const res = await fetch('quiz.html');
+    const html = await res.text();
+    document.getElementById('app').innerHTML = html;
+
+    // ⚡ if quiz.html has its own <script>, make sure to re-run it:
+    const scripts = document.getElementById('app').querySelectorAll("script");
+    scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+            newScript.src = oldScript.src;
+        } else {
+            newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+    });
+});
+
+
+        router.addRoute('chatbot', () => {
+            document.getElementById('app').innerHTML = `
+                <section class="bg-amber-100 min-h-screen p-4">
+                    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg h-[80vh] flex flex-col">
+                        <div class="p-4 border-b bg-[#c38d67] text-white rounded-t-lg">
+                            <h2 class="text-xl font-bold">Career Guidance Chatbot</h2>
+                        </div>
+                        <div class="flex-1 p-4 overflow-y-auto">
+                            <div class="space-y-4">
+                                <div class="bg-gray-100 p-3 rounded-lg max-w-xs">
+                                    <p>Hello! I'm here to help you with career guidance. What would you like to know?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 border-t">
+                            <div class="flex space-x-2">
+                                <input type="text" placeholder="Ask me about careers..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#c38d67]">
+                                <button class="bg-[#c38d67] text-white px-4 py-2 rounded-md hover:bg-[#b07d57] transition-colors">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                        <button onclick="router.navigateTo('home')" class="block m-4 text-center text-[#c38d67] hover:underline text-sm">
+                            ← Back to Home
+                        </button>
+                    </div>
+                </section>
+            `;
+        });
+
+        router.addRoute('login', async () => {
+    const res = await fetch('login.html');
+    const html = await res.text();
+    document.getElementById('app').innerHTML = html;
+
+    // ⚡ if quiz.html has its own <script>, make sure to re-run it:
+    const scripts = document.getElementById('app').querySelectorAll("script");
+    scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+            newScript.src = oldScript.src;
+        } else {
+            newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+    });
+});
+
+      router.addRoute('register', async () => {
+    const res = await fetch('register.html');
+    const html = await res.text();
+    document.getElementById('app').innerHTML = html;
+
+    // ⚡ re-run scripts inside register.html
+    const scripts = document.getElementById('app').querySelectorAll("script");
+    scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+            newScript.src = oldScript.src;
+        } else {
+            newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+    });
+});
+
+        // Form handlers
+        function handleLogin(event) {
+            event.preventDefault();
+            alert('Login functionality would be implemented here');
+            // You can add actual login logic here
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            alert('Registration functionality would be implemented here');
+            // You can add actual registration logic here
+        }
+
+        // Sidebar functionality
+        const menuIcon = document.getElementById('menuIcon');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuIcon.addEventListener('click', () => {
+            sidebar.classList.remove('hidden');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            setTimeout(() => {
+                sidebar.classList.add('hidden');
+            }, 300);
+        });
+
+        // Handle sidebar navigation
+        document.addEventListener('click', (e) => {
+            // Handle data-route clicks
+            if (e.target.hasAttribute('data-route')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const route = e.target.getAttribute('data-route');
+                router.navigateTo(route);
+                
+                // Close sidebar
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                setTimeout(() => {
+                    sidebar.classList.add('hidden');
+                }, 300);
+                return false;
+            }
+
+            // Handle onclick navigation calls
+            if (e.target.hasAttribute('onclick') && e.target.getAttribute('onclick').includes('router.navigateTo')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        });
+
+        // Prevent all form submissions from causing page reloads
+        document.addEventListener('submit', (e) => {
+            e.preventDefault();
+            return false;
+        });
+
+        // Initialize the router when page loads
+        router.init();
+         // About dropdown functionality
+    const aboutBtn = document.getElementById('aboutBtn');
+    const aboutDropdown = document.getElementById('aboutDropdown');
+    const aboutIcon = document.getElementById('aboutIcon');
+    
+    let isDropdownOpen = false;
+    
+    aboutBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleDropdown();
+    });
+    
+    function toggleDropdown() {
+        isDropdownOpen = !isDropdownOpen;
+        
+        if (isDropdownOpen) {
+            aboutDropdown.classList.remove('hidden');
+            aboutIcon.style.transform = 'rotate(180deg)';
+        } else {
+            aboutDropdown.classList.add('hidden');
+            aboutIcon.style.transform = 'rotate(0deg)';
+        }
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!aboutBtn.contains(e.target) && !aboutDropdown.contains(e.target)) {
+            if (isDropdownOpen) {
+                toggleDropdown();
+            }
+        }
+    });
+    
+    // Close dropdown when pressing Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isDropdownOpen) {
+            toggleDropdown();
+        }
+    });
+    </script>
+</body>
+</html>

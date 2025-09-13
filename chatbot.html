@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot-CareerPath</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+     <!-- Navigation -->
+<nav class="h-[80px] bg-[#f9ecde] border-b border-b-[#EFEFEF] flex items-center justify-between px-8 relative">
+    <!-- Left Side -->
+    <aside class="flex h-full items-center gap-5">
+        <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer hover:opacity-70">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14" />
+        </svg>
+        <div class="font-bold ml-2 text-3xl flex items-center text-[#2c2621]">
+           CareerPath
+        </div>
+    </aside>
+    
+    <!-- Right Side -->
+    <aside class="flex items-center gap-8 text-lg font-medium text-[#2c2621]">
+        <!-- About Button with Dropdown -->
+        <div class="relative">
+            <button id="aboutBtn" class="hover:text-purple-600 transition font-semibold flex items-center gap-1">
+                About
+                <svg id="aboutIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="transition-transform duration-200">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9l6 6 6-6"/>
+                </svg>
+            </button>
+            
+            <!-- About Dropdown Content -->
+            <div id="aboutDropdown" class="absolute top-full right-0 mt-2 w-[600px] max-w-[90vw] bg-white rounded-xl shadow-2xl border border-gray-100 p-8 z-50 hidden">
+                <div class="max-h-96 overflow-y-auto">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-[#2c2621] mb-2">About CareerPath</h3>
+                        <div class="w-16 h-1 bg-purple-600 mx-auto rounded-full"></div>
+                    </div>
+                    <div class="text-gray-700 leading-relaxed space-y-5 text-base">
+                        <p>
+                            CareerPath is your one-stop destination for personalized career and education guidance. We understand that choosing the right stream, degree, or career after school can feel overwhelming, especially with the growing number of opportunities and the pressure to make the "right" decision. That's why our platform combines smart technology with expert insights to make the journey simple and clear for students.
+                        </p>
+                        <p>
+                            Through our interactive <strong class="text-purple-700">aptitude and interest-based quiz</strong>, students discover careers that align with their strengths, passions, and future goals. We provide detailed <strong class="text-purple-700">career roadmaps</strong>—step-by-step pathways showing the education, skills, and opportunities needed to reach specific professions. Beyond just career matching, CareerPath also keeps students updated with <strong class="text-purple-700">college admissions timelines, government scholarships, and entrance exam alerts</strong>, ensuring they never miss an important milestone.
+                        </p>
+                        <p>
+                            What makes us unique is our focus on <strong class="text-purple-700">practical readiness</strong>. We go beyond theory, helping students explore <strong class="text-purple-700">skill development opportunities, mentorship programs, and real-world job readiness tips</strong>. Whether you are a high school student exploring your future, a parent guiding your child, or a graduate looking to reskill, CareerPath is designed to support you at every stage.
+                        </p>
+                        <p class="text-center bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <strong class="text-purple-800">Our mission is simple:</strong> to empower students to make informed, confident choices about their education and career, while building a future where every learner can achieve their true potential.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="router.navigateTo('login')" 
+            class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+            Log In
+        </button>
+        
+        <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer hover:opacity-80">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-gray-600">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M5.121 17.804A9.966 9.966 0 0112 15c2.21 0 4.236.72 5.879 1.926M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </div>
+    </aside>
+</nav>
+
+  
+
+  <!-- Chat Section -->
+    <section class="h-[calc(100vh-80px)] flex flex-col items-center justify-center">
+    <div class="w-full max-w-2xl bg-white rounded-lg shadow-lg flex flex-col h-[80vh]">
+      
+      <!-- Header -->
+      <div class="p-4 border-b bg-[#c38d67] text-white rounded-t-lg">
+        <h2 class="text-xl font-bold">Career Guidance Chatbot</h2>
+      </div>
+
+      <!-- Chat messages -->
+      <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-3"></div>
+
+      <!-- Input -->
+      <div class="p-4 border-t flex space-x-2">
+        <input id="userInput" type="text" placeholder="Ask me about careers..." 
+          class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:border-[#c38d67]">
+        <button onclick="sendMessage()" 
+          class="bg-[#c38d67] text-white px-4 py-2 rounded-md hover:bg-[#b07d57]">Send</button>
+      </div>
+    </div>
+  </section>
+
+<script>
+async function sendMessage() {
+  const input = document.getElementById("userInput");
+  const chatBox = document.getElementById("chatBox");
+  const message = input.value.trim();
+  if (!message) return;
+
+  // Add user message
+  chatBox.innerHTML += `<div class="text-right"><div class="inline-block bg-purple-100 p-2 rounded-lg">${message}</div></div>`;
+  input.value = "";
+
+  try {
+    const res = await fetch("https://visionx-1.onrender.com", { 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+    const data = await res.json();
+
+    // Add bot reply
+    chatBox.innerHTML += `<div class="text-left"><div class="inline-block bg-gray-200 p-2 rounded-lg">${data.reply}</div></div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+  } catch (err) {
+    chatBox.innerHTML += `<div class="text-left text-red-500">Error: could not connect to server.</div>`;
+  }
+}
+</script>
+</body>
+</html>

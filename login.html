@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CareerPath</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  
+<!-- Sidebar -->
+<div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+    <div class="p-4 border-b">
+        <h2 class="text-xl font-bold text-[#2c2621]">CareerPath</h2>
+    </div>
+    <nav class="mt-4">
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b">Home</a>
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b">Courses</a>
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b">Quiz</a>
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b">Chatbot</a>
+        <a href="login.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 border-b"  >Login</a>
+        <a href="register.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Register</a>
+    </nav>
+</div>
+
+<!-- Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+<div>
+    <section class="h-full bg-[#ecba96]">
+        
+    </section>
+</div>
+
+
+
+
+<section class="bg-[#f9f7f6] h-[calc(100vh-80px)] flex items-center justify-center">
+<button 
+    onclick="window.location.href='index.html'" 
+    class="absolute top-10 left-0 flex items-center text-[#2c2621] hover:text-[#c38d67] transition-colors">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+         viewBox="0 0 24 24">
+      <path fill="none" stroke="currentColor" stroke-linecap="round" 
+            stroke-linejoin="round" stroke-width="2" 
+            d="M9 12h14M5 12l4-4m-4 4l4 4" />
+    </svg>
+  </button>
+
+    <div class="bg-[#F2F2F2] p-8 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-bold text-[#2c2621] mb-6 text-center">Login</h2>
+        <form>
+            <div class="mb-4">
+            <div class="mb-4">
+  <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+  <input type="email" 
+         autocomplete="off" 
+         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#c38d67]" 
+         required>
+</div>
+
+<div class="mb-6">
+  <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+  <input type="password" 
+         autocomplete="new-password" 
+         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#c38d67]" 
+         required>
+</div>
+
+            </div>
+            <button type="submit" class="w-full bg-[#c38d67] text-white py-2 px-4 rounded-md hover:bg-[#b07d57] transition-colors">Login</button>
+        </form>
+        <p class="mt-4 text-center text-sm text-gray-600">
+            Don't have an account? <a href="register.html" class="text-[#c38d67] hover:underline">Register</a>
+        </p>
+        <a href="index.html" class="block mt-4 text-center text-[#c38d67] hover:underline text-sm">← Back to Home</a>
+    </div>
+    </section>
+    <script type="module">
+const menuIcon = document.getElementById('menuIcon');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+menuIcon.addEventListener('click', () => {
+    sidebar.classList.remove('hidden');
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+});
+
+overlay.addEventListener('click', () => {
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    setTimeout(() => {
+        sidebar.classList.add('hidden');
+    }, 300);
+});
+
+// Close sidebar when clicking menu items
+document.querySelectorAll('#sidebar a').forEach(link => {
+    link.addEventListener('click', () => {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        setTimeout(() => {
+            sidebar.classList.add('hidden');
+        }, 300);
+    });
+});
+// Client-side routing
+document.querySelectorAll('[data-route]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();  // stop browser navigation
+    
+    const url = link.getAttribute('href');
+
+    // Load page content into section
+    fetch(url)
+      .then(res => res.text())
+      .then(data => {
+        // Extract only <body> content from loaded HTML
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(data, "text/html");
+        const bodyContent = htmlDoc.body.innerHTML;
+        
+        document.getElementById('content').innerHTML = bodyContent;
+      })
+      .catch(err => {
+        document.getElementById('content').innerHTML = `<p class="text-red-600">Error loading ${url}</p>`;
+      });
+
+    // Close sidebar after navigation
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    setTimeout(() => {
+      sidebar.classList.add('hidden');
+    }, 300);
+  });
+});
+
+
+  // Import Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+    from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
+
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Expose auth globally
+  window.auth = auth;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+
+
+
+</script>
+</body>
+</html>
