@@ -2,11 +2,20 @@ import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+// ✅ Fix __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ✅ Serve static files from src folder (where chatbot.html is)
+app.use(express.static(path.join(__dirname, "src")));
 
 // Chat endpoint
 app.post("/api/chat", async (req, res) => {
@@ -17,7 +26,7 @@ app.post("/api/chat", async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`, // stored safely
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
@@ -40,5 +49,5 @@ app.post("/api/chat", async (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+const PORT = process.env.PORT || 10000; // Render auto-assigns port
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
