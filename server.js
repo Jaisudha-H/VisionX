@@ -1,6 +1,23 @@
-// Add these endpoints to your existing server.js file, before the app.listen() part:
+import express from "express";
+import fetch from "node-fetch";
+import dotenv from "dotenv";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Debug endpoint - ADD THIS
+dotenv.config();
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// Fix __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files (index.html, chatbot.html, etc.)
+app.use(express.static(__dirname));
+
+// Debug endpoint - to check API key
 app.get("/api/debug", (req, res) => {
   res.json({
     status: "Server running",
@@ -12,12 +29,12 @@ app.get("/api/debug", (req, res) => {
   });
 });
 
-// Test endpoint - ADD THIS
+// Test endpoint
 app.get("/api/test", (req, res) => {
   res.json({ message: "API working!", time: new Date() });
 });
 
-// Also, modify your existing /api/chat endpoint to add logging:
+// Chat endpoint
 app.post("/api/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
@@ -41,7 +58,7 @@ app.post("/api/chat", async (req, res) => {
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
         messages: [
-          { role: "system", content: "You are a helpful AI career advisor." },
+          { role: "system", content: "You are a helpful AI career advisor for students. Provide practical career guidance and education advice." },
           { role: "user", content: userMessage }
         ],
         max_tokens: 300
@@ -67,5 +84,15 @@ app.post("/api/chat", async (req, res) => {
   } catch (error) {
     console.error("Server Error:", error.message);
     res.json({ reply: `❌ Server Error: ${error.message}` });
+  }
+});
+
+// Start server
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🔑 OpenAI API Key configured: ${!!process.env.OPENAI_API_KEY}`);
+  if (process.env.OPENAI_API_KEY) {
+    console.log(`🔑 API Key length: ${process.env.OPENAI_API_KEY.length}`);
   }
 });
