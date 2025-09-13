@@ -14,8 +14,8 @@ app.use(cors());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Serve static files from src folder (where chatbot.html is)
-app.use(express.static(path.join(__dirname, "src")));
+// ✅ Serve static files (index.html, chatbot.html, etc.)
+app.use(express.static(__dirname));
 
 // Chat endpoint
 app.post("/api/chat", async (req, res) => {
@@ -49,5 +49,5 @@ app.post("/api/chat", async (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 10000; // Render auto-assigns port
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
